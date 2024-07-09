@@ -10,11 +10,11 @@
 For Linux-centric policies:
 
 ```bash
-$ ansible-policy -p playbooks/linux/<playbook>.yml --policy-dir policy/linux
+ansible-policy -p playbooks/linux/<playbook>.yml --policy-dir policy/linux
 ```
 
 For OpenShift Virtualization policies:
 
 ```bash
-$ ansible-policy -p playbooks/ocp_virt/<playbook>.yml --policy-dir policy/ocp_virt
+ansible-policy -p playbooks/ocp_virt/<playbook>.yml --policy-dir policy/ocp_virt
 ```
