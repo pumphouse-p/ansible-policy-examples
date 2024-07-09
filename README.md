@@ -18,3 +18,9 @@ For OpenShift Virtualization policies:
 ```bash
 ansible-policy -p playbooks/ocp_virt/<playbook>.yml --policy-dir policy/ocp_virt
 ```
+
+For Podman policies:
+
+```bash
+ansible-policy -p playbooks/containers/<playbook.yml --policy-dir policy/containers
+```

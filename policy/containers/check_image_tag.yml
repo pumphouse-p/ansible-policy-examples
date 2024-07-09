@@ -1,0 +1,16 @@
+---
+- name: Ensure container image tags are explicitly defined
+  hosts: localhost
+
+  policies:
+    - name: Disallow latest images
+      target: task
+      condition:
+        any:
+          - input["containers.podman.podman_image"] lacks key tag
+          - input["containers.podman.podman_image"].tag == 'latest'
+      actions:
+        - deny:
+            msg: Policy denies pulling latest container images
+      tags:
+        - compliance

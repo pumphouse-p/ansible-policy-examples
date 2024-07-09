@@ -1,0 +1,12 @@
+---
+- name: Pull container image
+  hosts: all
+  become: false
+  gather_facts: false
+
+  tasks:
+    - name: Pull container image
+      containers.podman.podman_image:
+        name: quay.io/deparris/peek-go
+        tag: latest
+        state: present
