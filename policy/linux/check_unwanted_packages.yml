@@ -6,12 +6,26 @@
       - telnet
 
   policies:
+    - name: Check that desired state is explicitly set
+      target: task
+      condition:
+        any:
+          - input["ansible.builtin.package"] lacks key state
+          - input["ansible.builtin.dnf"] lacks key state
+          - input["ansible.builtin.apt"] lacks key state
+      actions:
+        - deny:
+            msg: Missing 'state' parameter for {{ input._agk.task.module_info.fqcn }}
+      tags:
+        - compliance
+
     - name: Check for unwanted packages
       target: task
       condition:
         any:
           - input["ansible.builtin.package"].name in unwanted_packages and input["ansible.builtin.package"].state == 'present'
           - input["ansible.builtin.dnf"].name in unwanted_packages and input["ansible.builtin.dnf"].state == 'present'
+          - input["ansible.builtin.apt"].name in unwanted_packages and input["ansible.builtin.apt"].state == 'present'
       actions:
         - deny:
             msg: The package list contains an unsanctioned package from this list {{ unwanted_packages }}

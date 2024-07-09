@@ -1,0 +1,13 @@
+---
+- name: Manage firewall settings
+  hosts: all
+  become: true
+  gather_facts: true
+  become_user: ansibleadmin
+
+  tasks:
+    - name: Open up firewall ports
+      ansible.posix.firewalld:
+        service: http
+        state: enabled
+        permanent: true

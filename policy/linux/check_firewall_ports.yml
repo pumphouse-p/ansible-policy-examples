@@ -1,0 +1,27 @@
+---
+- name: Ensure certain ports are not opened
+  hosts: localhost
+  vars:
+    disallowed_ports:
+      - 80
+    disallowed_services:
+      - http
+    disallowed_protocols:
+      - icmp
+    disallowed_sources:
+      - 0.0.0.0/24
+
+  policies:
+    - name: Ensure certain ports services and protocols are not being allowed
+      target: task
+      condition:
+        any:
+          - input["ansible.posix.firewalld"].service in disallowed_services
+          - input["ansible.posix.firewalld"].port in disallowed_ports
+          - input["ansible.posix.firewalld"].protocol in disallowed_protocols
+          - input["ansible.posix.firewalld"].source in disallowed_sources
+      actions:
+        - deny:
+            msg: Firewall settings do not meet policies
+      tags:
+        - compliance

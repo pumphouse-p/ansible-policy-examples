@@ -8,10 +8,8 @@
     install_packages:
       - git
       - vim
-      - telnet
 
   tasks:
     - name: Install packages
       ansible.builtin.dnf:
         name: "{{ install_packages }}"
-        state: present
