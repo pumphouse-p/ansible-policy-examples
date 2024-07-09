@@ -1,0 +1,18 @@
+---
+- name: Check for OCP-Virt VM Instance Type
+  hosts: localhost
+  vars:
+    allowed_instance_types:
+      - u1.small
+      - u1.medium
+      - u1.large
+
+  policies:
+    - name: Check for instancetype.name
+      target: task
+      condition: input["redhat.openshift_virtualization.kubevirt_vm"].instancetype.name not in allowed_instance_types
+      actions:
+        - deny:
+            msg: The instance type {{ input["redhat.openshift_virtualization.kubevirt_vm"].instancetype.name }} for {{ input["redhat.openshift_virtualization.kubevirt_vm"].name }} is not allowed, allowed instance types are one of {{ allowed_instance_types }}.
+      tags:
+        - compliance

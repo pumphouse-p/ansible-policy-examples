@@ -1,0 +1,31 @@
+---
+- name: Run administrative tasks
+  hosts: localhost
+  gather_facts: false
+  become: false
+
+  tasks:
+    - name: Print message
+      ansible.builtin.debug:
+        msg: Hello world!
+
+- name: Run administrative tasks again
+  hosts: localhost
+  gather_facts: false
+  become: true
+
+  tasks:
+    - name: Print message
+      ansible.builtin.debug:
+        msg: Hello world!
+
+- name: Run administrative tasks again again
+  hosts: localhost
+  gather_facts: false
+  become: true
+  become_user: ansibleadmin
+
+  tasks:
+    - name: Print message
+      ansible.builtin.debug:
+        msg: Hello world!

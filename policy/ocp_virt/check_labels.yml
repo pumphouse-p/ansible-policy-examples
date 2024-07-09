@@ -1,0 +1,17 @@
+---
+- name: Check for required labels on VMs
+  hosts: localhost
+  vars:
+    required_label: app
+
+  policies:
+    - name: Check for required labels
+      target: task
+      condition:
+        any:
+          - input["redhat.openshift_virtualization.kubevirt_vm"].labels has key required_label
+      actions:
+        - warn:
+            msg: Missing required labels {{ required_label }}
+      tags:
+        - compliance

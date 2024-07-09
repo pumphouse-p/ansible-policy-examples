@@ -1,0 +1,17 @@
+---
+- name: Install software on Linux systems
+  hosts: all
+  become: true
+  become_user: ansibleadmin
+  gather_facts: true
+  vars:
+    install_packages:
+      - git
+      - vim
+      - telnet
+
+  tasks:
+    - name: Install packages
+      ansible.builtin.dnf:
+        name: "{{ install_packages }}"
+        state: present

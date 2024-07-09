@@ -1,0 +1,22 @@
+---
+- name: Check for OCP-Virt VM Image
+  hosts: localhost
+  vars:
+    allowed_images:
+      - quay.io/containerdisks/fedora:40
+      - quay.io/containerdisks/fedora:39
+      - quay.io/containerdisks/centos-stream:9
+      - quay.io/containerdisks/centos-stream:8
+
+  policies:
+    - name: Check for image type
+      target: task
+      condition:
+        any:
+          - input["redhat.openshift_virtualization.kubevirt_vm"].spec.volumes is not defined
+          - input["redhat.openshift_virtualization.kubevirt_vm"].spec.volumes[0].containerDisk.image not in allowed_images
+      actions:
+        - deny:
+            msg: The image {{ input["redhat.openshift_virtualization.kubevirt_vm"].spec.volumes[0].containerDisk.image }} for {{ input["redhat.openshift_virtualization.kubevirt_vm"].name }} is not allowed, allowed images are one of {{ allowed_images }}.
+      tags:
+        - compliance

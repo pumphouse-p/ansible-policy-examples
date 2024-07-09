@@ -1,0 +1,69 @@
+---
+- name: Provision a VM on OCP-Virt
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  tasks:
+    - name: Create a VM that passes policybook checks
+      redhat.openshift_virtualization.kubevirt_vm:
+        state: present
+        name: valid-vm
+        namespace: default
+        labels:
+          app: web
+          purpose: web
+          owner: web
+        instancetype:
+          name: u1.medium
+        preference:
+          name: valid-vm
+        spec:
+          domain:
+            devices:
+              interfaces:
+                - name: default
+                  masquerade: {}
+                - name: bridge-network
+                  bridge: {}
+          networks:
+            - name: default
+              pod: {}
+            - name: bridge-network
+              multus:
+                networkName: kindexgw
+          volumes:
+            - containerDisk:
+                image: quay.io/containerdisks/fedora:40
+              name: containerdisk
+
+    - name: Create a VM that does not pass policybook checks
+      redhat.openshift_virtualization.kubevirt_vm:
+        state: present
+        name: invalid-vm
+        namespace: default
+        labels:
+          app: web
+          purpose: web
+        instancetype:
+          name: u1.xlarge
+        preference:
+          name: invalid-vm 
+        spec:
+          domain:
+            devices:
+              interfaces:
+                - name: default
+                  masquerade: {}
+                - name: bridge-network
+                  bridge: {}
+          networks:
+            - name: default
+              pod: {}
+            - name: bridge-network
+              multus:
+                networkName: kindexgw
+          volumes:
+            - containerDisk:
+                image: quay.io/containerdisks/fedora:latest
+              name: containerdisk

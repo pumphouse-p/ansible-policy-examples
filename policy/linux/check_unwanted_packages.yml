@@ -1,0 +1,19 @@
+---
+- name: Check to ensure certain packages are not being installed
+  hosts: localhost
+  vars:
+    unwanted_packages:
+      - telnet
+
+  policies:
+    - name: Check for unwanted packages
+      target: task
+      condition:
+        any:
+          - input["ansible.builtin.package"].name in unwanted_packages and input["ansible.builtin.package"].state == 'present'
+          - input["ansible.builtin.dnf"].name in unwanted_packages and input["ansible.builtin.dnf"].state == 'present'
+      actions:
+        - deny:
+            msg: The package list contains an unsanctioned package from this list {{ unwanted_packages }}
+      tags:
+        - compliance
